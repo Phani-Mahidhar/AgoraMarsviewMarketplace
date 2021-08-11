@@ -1,0 +1,4 @@
+include ':socket-io'
+include ':extension'
+include ':app'
+rootProject.name = "AgoraMarsviewMarketplace"

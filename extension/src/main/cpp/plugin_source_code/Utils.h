@@ -1,0 +1,12 @@
+//
+// Created by kphan on 8/3/2021.
+//
+
+#ifndef AGORAMARSVIEWMARKETPLACE_UTILS_H
+#define AGORAMARSVIEWMARKETPLACE_UTILS_H
+
+#define VENDOR_NAME Marsview
+#define VENDOR_NAME_STRING "Marsview"
+#define AUDIO_FILTER_NAME "TranscriptProvider"
+
+#endif //AGORAMARSVIEWMARKETPLACE_UTILS_H

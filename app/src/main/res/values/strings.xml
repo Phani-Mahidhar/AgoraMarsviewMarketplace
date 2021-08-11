@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">AgoraMarsviewMarketplace</string>
+    <string name="agora_app_id">785bc12c0f414be191dfbed3d63b9f80</string>
+    <string name="agora_temp_token">006785bc12c0f414be191dfbed3d63b9f80IABHX9Zwjd6qO7deHYPbtS63ZqGSb48olJlXBKXQJGNLfeEVD4QAAAAAEAAabyR2mmATYQEAAQCZYBNh</string>
+    <string name="agora_app_secret">118d24470dea414da8952d158739e36a</string>
+    <string name="channel_name">agora_extension</string>
+</resources>
