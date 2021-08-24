@@ -55,15 +55,15 @@ public class MainActivity extends AppCompatActivity implements io.agora.rtc2.IMe
     private SurfaceView mRemoteView;
     private String socketUrl;
     private SharedPreferences prefs;
-//    private final String API_KEY = "2d5c6b86-03ba-48a6-87ba-e45386aecb73";
-//    private final String SECRET_KEY = "5NE6Q1P-0EX4H9M-GYXE8MZ-GTQCPWY";
-//    private final String USER_ID = "012345678@agora.io";
+    private final String API_KEY = "f783fb2a-a803-4e0e-bf3a-df8c1c0e9153";
+    private final String SECRET_KEY = "YY1ZPAG-N01MW3N-QWXDZ31-3G792MW";
+    private final String USER_ID = "12345678910@agora.io";
 
     private String audioId;
 
-    private final String API_KEY = "84e32bf6-c212-4daa-b9eb-4823470a7876";
-    private final String SECRET_KEY = "GKHJQXQ-R894VAJ-Q7NMG8R-8W57GXJ";
-    private final String USER_ID = "phani@marsview.ai";
+//    private final String API_KEY = "84e32bf6-c212-4daa-b9eb-4823470a7876";
+//    private final String SECRET_KEY = "GKHJQXQ-R894VAJ-Q7NMG8R-8W57GXJ";
+//    private final String USER_ID = "phani@marsview.ai";
     private final String PROJECT_ID = "agoraTestProject";
     private boolean extensionEnabled = true;
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -310,21 +310,30 @@ public class MainActivity extends AppCompatActivity implements io.agora.rtc2.IMe
                     JSONObject data = new JSONObject(value);
                     String txnId = data.getString("txnId");
                     JSONArray enableModels = new JSONArray("[{'modelType':'speech_to_text','modelConfig':{'automatic_punctuation':true,'custom_vocabulary':['Marsview','Communication'],'speaker_seperation':{'num_speakers':1},'enableKeywords':true}},{'modelType':'emotion_analysis'},{'modelType':'sentiment_analysis'},{'modelType':'speech_type_analysis'},{'modelType':'action_items','modelConfig':{'priority':1}},{'modelType':'question_response','modelConfig':{'quality':1}},{'modelType':'extractive_summary'},{'modelType':'meeting_topics'}]");
-
-                    // This is to enable models that you require before producing transcription.
-                    // remember that transcription is only produced after the required models are
-                    // enabled.
+//                    JSONArray enableModels = new JSONArray("[{\n" +
+//                            "        \"modelType\":\"speech_to_text\",\n" +
+//                            "        \"modelConfig\": {\n" +
+//                            "            \"speaker_seperation\":{\n" +
+//                            "                \"enable\":true,\n" +
+//                            "                \"num_speakers\":-1\n" +
+//                            "            }\n" +
+//                            "        }\n" +
+//                            "}]");
+                    Log.d(TAG, enableModels.toString());
+//                     This is to enable models that you require before producing transcription.
+//                     remember that transcription is only produced after the required models are
+//                     enabled.
                     String computeDataResponse = requestHelper.postComputeDataRequest(txnId, enableModels);
                     Log.d(TAG, computeDataResponse);
                     // To get the processing state of each model that is enabled u can use the method
                     // getProcessingState
-                    String processingStateResponse = requestHelper.getProcessingState(txnId);
-                    Log.d(TAG, processingStateResponse);
+//                    String processingStateResponse = requestHelper.getProcessingState(txnId);
+//                    Log.d(TAG, processingStateResponse);
 
                     // to get the metadata of the audio processed provide the transaction id string
                     // to the get requestMetadata function.
-                    String MetadataResponse = requestHelper.getRequestMetadata(txnId);
-                    Log.d(TAG, MetadataResponse);
+//                    String MetadataResponse = requestHelper.getRequestMetadata(txnId);
+//                    Log.d(TAG, MetadataResponse);
                 }catch(Exception e){
                     e.printStackTrace();
                 }

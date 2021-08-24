@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">AgoraMarsviewMarketplace</string>
-    <string name="agora_app_id">785bc12c0f414be191dfbed3d63b9f80</string>
-    <string name="agora_temp_token">006785bc12c0f414be191dfbed3d63b9f80IABHX9Zwjd6qO7deHYPbtS63ZqGSb48olJlXBKXQJGNLfeEVD4QAAAAAEAAabyR2mmATYQEAAQCZYBNh</string>
+    <string name="agora_app_id">bcc18c336ece4d46a679ec11f1612071</string>
+    <string name="agora_temp_token">006bcc18c336ece4d46a679ec11f1612071IADY1LMiABGz5291ZClrawfFgpa9kgZmL9aFcaYqm9c1juEVD4QAAAAAEABa3tZEf6ccYQEAAQB/pxxh</string>
     <string name="agora_app_secret">118d24470dea414da8952d158739e36a</string>
     <string name="channel_name">agora_extension</string>
 </resources>

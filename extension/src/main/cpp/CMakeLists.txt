@@ -11,16 +11,26 @@ project(agora-marsview)
 set(agora-lib-so ${PROJECT_SOURCE_DIR}/../agoraLibs/${CMAKE_ANDROID_ARCH_ABI}/libagora-rtc-sdk-jni.so)
 link_libraries(${agora-lib-so})
 
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 
+set(openssl_root_dir ${PROJECT_SOURCE_DIR}/../openssl)
+set(openssl_libraries_dir ${openssl_root_dir}/${CMAKE_ANDROID_ARCH_ABI}/lib)
+
+set(OPENSSL_ROOT_DIR ${openssl_root_dir}/${CMAKE_ANDROID_ARCH_ABI})
+set(OPENSSL_INCLUDE_DIR ${openssl_root_dir}/include)
+set(OPENSSL_CRYPTO_LIBRARY ${openssl_root_dir}/${CMAKE_ANDROID_ARCH_ABI}/lib/libcrypto.a)
+set(OPENSSL_SSL_LIBRARY ${openssl_root_dir}/${CMAKE_ANDROID_ARCH_ABI}/lib/libssl.a)
+set(OPENSSL_LIBRARIES "ssl" "crypto")
+
+#link_directories(${openssl_libraries_dir})
+include_directories(${OPENSSL_INCLUDE_DIR})
 
 set(socket-io_root ./socket.io-client-cpp)
 set(socket-io_build-dir ${socket-io_root}/builds/android)
 
 add_subdirectory( ${socket-io_root} ${socket-io_build-dir})
 
-
-
+#find_package(OpenSSL REQUIRED)
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
 # You can define multiple libraries, and CMake builds them for you.
@@ -45,6 +55,7 @@ add_library( # Sets the name of the library.
 # you want to add. CMake verifies that the library exists before
 # completing its build.
 
+
 find_library( # Sets the name of the path variable.
               log-lib
 
@@ -56,11 +67,18 @@ find_library( # Sets the name of the path variable.
 # can link multiple libraries, such as libraries you define in this
 # build script, prebuilt third-party libraries, or system libraries.
 #target_include_directories(agora-marsview PRIVATE ./plugin_source_code)
+
 target_include_directories(agora-marsview PRIVATE ${PROJECT_SOURCE_DIR})
 
 target_link_libraries( # Specifies the target library.
                         agora-marsview
                         ${agora-lib-so}
+
+                        ${OPENSSL_INCLUDE_DIR}
+                        ${OPENSSL_SSL_LIBRARY}
+                        ${OPENSSL_CRYPTO_LIBRARY}
+
+                        sioclient_tls
                         sioclient
                        # Links the target library to the log library
                        # included in the NDK.

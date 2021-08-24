@@ -22,9 +22,6 @@ namespace agora {
                 PRINTF_INFO("websocket send");
                 initSocketConection();
             });
-            io.set_socket_open_listener([&](std::string const& nsp){
-                PRINTF_INFO("socket opened");
-            });
 
             io.socket()->on("connection-status", [&](
                     std::string const& name,
@@ -55,12 +52,20 @@ namespace agora {
                  if(!socket_connection_running){
                      io.socket()->close();
                      _resetVariables();
-                     socket_connection_failed = true;
-                 }else{
-                     socket_connection_failed = false;
                  }
              });
 
+            io.socket()->on("ended-connection", [&](
+                    std::string const& name,
+                    sio::message::ptr const& data,
+                    bool isAck,
+                    sio::message::list &ack_resp
+            ){
+                ended_existing_connection = true;
+                if(received_new_connection_request){
+                    initSocketConection();
+                }
+            });
             io.socket()->on("transactionId", [&](
                     std::string const& name,
                     sio::message::ptr const& data,
@@ -75,11 +80,7 @@ namespace agora {
                 if (control_ != nullptr) {
                     control_->fireEvent(VENDOR_NAME_STRING, AUDIO_FILTER_NAME, "transactionId", builder.getJSONObject().c_str());
                 }
-//                io.socket()->close();
-                if(received_new_connection_request){
-                    _resetVariables();
-                    initSocketConection();
-                }
+
             });
 
         }
@@ -97,12 +98,13 @@ namespace agora {
             if(!socket_connection_init){
                 std::map<std::string, std::string> connectOptions;
                 connectOptions.insert(std::pair<std::string, std::string>("path", ""));
-                io.connect("http://agorasockets.marsview.ai");
+                io.connect("https://agorasockets.marsview.ai");
 //                io.connect("http://192.168.29.147:3004");
+//                io.connect("https://480d024d4396.ngrok.io");
                 audio_metadata = serializePCMFrameMetadata(inAudioPcmFrame);
                 socket_connection_init = true;
             }
-            if((!socket_started || waiting_for_accept ) && !socket_connection_failed){
+            if((!socket_started || waiting_for_accept ) && !ended_existing_connection){
                 size_t length = inAudioPcmFrame.samples_per_channel_ * inAudioPcmFrame.num_channels_;
                 if(length >= inAudioPcmFrame.kMaxDataSizeSamples){
                     length = inAudioPcmFrame.kMaxDataSizeSamples;
@@ -111,7 +113,7 @@ namespace agora {
                     init_audio_data.push_back(inAudioPcmFrame.data_[i]);
                 }
             }
-            if(socket_connection_running){
+            if(socket_connection_running && !ended_existing_connection){
                 if(frameNumber == 0){
                     std::string initSerialData = serializePCMFrameAudioData(init_audio_data, frameNumber);
                     io.socket()->emit("pcm-frame", initSerialData);
@@ -145,27 +147,28 @@ namespace agora {
 //            PRINTF_INFO("Socket_connection_running %d",socket_connection_running);
 //            PRINTF_INFO("Socket_connection_init %d",socket_connection_init);
 
-            if(socket_connection_running){
+            if(!ended_existing_connection){
                 received_new_connection_request = true;
             }
             else{
                 if(socket_connection_init){
                     initSocketConection();
-                    socket_connection_failed = false;
                 }
             }
+            _resetVariables();
         }
 
         void AudioTranscriptProvider::endStreaming() {
             if(socket_connection_running){
                 io.socket()->emit("end-connection", static_cast<sio::message::list>(""), [&](const sio::message::list &){
                 });
-                _resetVariables();
+                socket_connection_running = false;
             }
         }
 
         void AudioTranscriptProvider::initSocketConection() {
             JSONBuilder connection_data;
+            _resetVariables();
             connection_data.addJsonObject("metadata", audio_metadata);
             connection_data.addObject("api_key", API_KEY);
             connection_data.addObject("secret_key", SECRET_KEY);
@@ -174,6 +177,7 @@ namespace agora {
             io.socket()->emit("init-connection", connection_data.getJSONObject());
             init_audio_data.clear();
             socket_started = true;
+            ended_existing_connection = false;
         }
     }
 }

@@ -43,17 +43,15 @@ namespace agora {
             std::string USER_ID = "null";
             std::string PROJECT_ID = "null";
 
-
             std::string socket_addr = "http://192.168.29.147:8081";
 
             uint32_t frameNumber  = 0;
             bool socket_started = false;
             bool socket_connection_init = false;
             bool socket_connection_running = false;
-            bool socket_connection_failed = false;
             bool waiting_for_accept = true;
             bool received_new_connection_request = false;
-
+            bool ended_existing_connection = true;
 
             sio::client io;
             rtc::IExtensionControl* control_;
@@ -64,7 +62,6 @@ namespace agora {
                 frameNumber = 0;
                 socket_started = false;
                 socket_connection_running = false;
-                socket_connection_failed = false;
                 waiting_for_accept = true;
                 received_new_connection_request = false;
             }
