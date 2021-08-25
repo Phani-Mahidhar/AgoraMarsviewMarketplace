@@ -55,16 +55,24 @@ public class MainActivity extends AppCompatActivity implements io.agora.rtc2.IMe
     private SurfaceView mRemoteView;
     private String socketUrl;
     private SharedPreferences prefs;
-    private final String API_KEY = "f783fb2a-a803-4e0e-bf3a-df8c1c0e9153";
-    private final String SECRET_KEY = "YY1ZPAG-N01MW3N-QWXDZ31-3G792MW";
-    private final String USER_ID = "12345678910@agora.io";
+//    private final String API_KEY = "d0c900e8-056c-44da-87eb-48177abf6b95";
+//    private final String SECRET_KEY = "T34G1T1-0NP49PH-GZNMG5V-FAZPQ5A";
+//    private final String USER_ID = "12345678910@agora.io";
+//      private final String API_KEY = "43cd3991-4551-4b92-a324-2c5214f7e4b7";
+//      private final String SECRET_KEY = "8F6KK4F-8N8MQ4Q-MCJ2RMG-2KVY9DW";
+//      private final String USER_ID = "65750@agora.io";
+
+    private final String API_KEY = "fc6e7577-7401-4d9a-bacb-44b6dac8de77";
+    private final String SECRET_KEY = "ZHQ7AXX-EG0MV6M-QB5M9DH-VB4DWXX";
+    private final String USER_ID = "50000@agora.io";
+    private final String PROJECT_ID = "50000";
 
     private String audioId;
 
 //    private final String API_KEY = "84e32bf6-c212-4daa-b9eb-4823470a7876";
 //    private final String SECRET_KEY = "GKHJQXQ-R894VAJ-Q7NMG8R-8W57GXJ";
 //    private final String USER_ID = "phani@marsview.ai";
-    private final String PROJECT_ID = "agoraTestProject";
+//    private final String PROJECT_ID = "396661";
     private boolean extensionEnabled = true;
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -319,7 +327,7 @@ public class MainActivity extends AppCompatActivity implements io.agora.rtc2.IMe
 //                            "            }\n" +
 //                            "        }\n" +
 //                            "}]");
-                    Log.d(TAG, enableModels.toString());
+//                    Log.d(TAG, enableModels.toString());
 //                     This is to enable models that you require before producing transcription.
 //                     remember that transcription is only produced after the required models are
 //                     enabled.
@@ -327,13 +335,13 @@ public class MainActivity extends AppCompatActivity implements io.agora.rtc2.IMe
                     Log.d(TAG, computeDataResponse);
                     // To get the processing state of each model that is enabled u can use the method
                     // getProcessingState
-//                    String processingStateResponse = requestHelper.getProcessingState(txnId);
-//                    Log.d(TAG, processingStateResponse);
+                    String processingStateResponse = requestHelper.getProcessingState(txnId);
+                    Log.d(TAG, processingStateResponse);
 
                     // to get the metadata of the audio processed provide the transaction id string
                     // to the get requestMetadata function.
-//                    String MetadataResponse = requestHelper.getRequestMetadata(txnId);
-//                    Log.d(TAG, MetadataResponse);
+                    String MetadataResponse = requestHelper.getRequestMetadata(txnId);
+                    Log.d(TAG, MetadataResponse);
                 }catch(Exception e){
                     e.printStackTrace();
                 }

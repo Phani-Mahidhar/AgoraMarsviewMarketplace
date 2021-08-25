@@ -12,7 +12,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import androidx.annotation.Keep;
 
+@Keep
 public class MarsviewRequestHelper {
     private String apiKey;
     private String apiSecret;
@@ -34,7 +36,7 @@ public class MarsviewRequestHelper {
             object.put("apiKey", this.apiKey);
             object.put("apiSecret", this.apiSecret);
             object.put("userId", this.userId);
-            out = postTask.execute("https://api.marsview.ai/cb/v1/auth/get_access_token", object.toString()).get();
+            out = postTask.execute("https://api.marsview.ai/cb/v1/auth/create_access_token", object.toString()).get();
             return new JSONObject(out);
         }catch(Exception err){
             Log.e("Agora_Marsview_Java", err.toString());
@@ -53,13 +55,13 @@ public class MarsviewRequestHelper {
                 postData.put("userId", this.userId);
                 postData.put("txnId", txnId);
                 postData.put("enableModels",enableModels);
-                String url = "https://api.marsview.ai/cb/v1/conversation/" + this.userId + "/compute";
-                String postComputeDataResponse = new PostTask().execute(url, accessToken, postData.toString()).get();
+                String url = "https://api.marsview.ai/cb/v1/conversation/compute";
+                String postComputeDataResponse = new PostTask().execute(url, "Bearer "+ accessToken, postData.toString()).get();
 
                 return postComputeDataResponse;
             }
             else{
-                return accessTokenResponse.getString("err");
+                return accessTokenResponse.getString("error");
             }
         }catch(Exception e){
             Log.e("Agora_Marsview_Java", e.toString());
@@ -78,12 +80,12 @@ public class MarsviewRequestHelper {
                 JSONObject postData = new JSONObject();
                 postData.put("userId", this.userId);
                 postData.put("txnId", txnId);
-                String url = "https://api.marsview.ai/cb/v1/conversation/get_txn/" + this.userId + "/" + txnId;
-                String getProcessingStateResponse = new GetTask().execute(url, accessToken, postData.toString()).get();
+                String url = "https://api.marsview.ai/cb/v1/conversation/get_txn/"+ txnId;
+                String getProcessingStateResponse = new GetTask().execute(url,"Bearer "+ accessToken, postData.toString()).get();
                 return getProcessingStateResponse;
             }
             else{
-                return accessTokenResponse.getString("err");
+                return accessTokenResponse.toString();
             }
         }catch(Exception e){
             Log.e("Agora_Marsview_Java", e.toString());
@@ -101,12 +103,12 @@ public class MarsviewRequestHelper {
                 JSONObject postData = new JSONObject();
                 postData.put("userId", this.userId);
                 postData.put("txnId", txnId);
-                String url = "https://api.marsview.ai/cb/v1/conversation/fetch_metadata/" + this.userId + "/" + txnId;
-                String getRequestMetadataResponse = new GetTask().execute(url, accessToken, postData.toString()).get();
+                String url = "https://api.marsview.ai/cb/v1/conversation/fetch_metadata/" + txnId;
+                String getRequestMetadataResponse = new GetTask().execute(url,"Bearer " +accessToken, postData.toString()).get();
                 return getRequestMetadataResponse;
             }
             else{
-                return accessTokenResponse.getString("err");
+                return accessTokenResponse.toString();
             }
         }catch(Exception e){
             Log.e("Agora_Marsview_Java", e.toString());

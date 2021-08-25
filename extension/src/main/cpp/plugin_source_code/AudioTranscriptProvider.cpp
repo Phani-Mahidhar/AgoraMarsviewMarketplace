@@ -30,19 +30,24 @@ namespace agora {
                     sio::message::list &ack_resp
                     ){
                  waiting_for_accept = false;
-                 std::string connectionState = data->get_map()["connection"]->get_string();
+                for (const auto& x : data->get_map()) {
+//                    std::cout << x.first << ": " << x.second << "\n";
+                        PRINTF_INFO("%s : %s", x.first.c_str(), x.second->get_string().c_str());
+                }
+
+                std::string connectionState = data->get_map()["connection"]->get_string();
                  PRINTF_INFO("connectionState = %s", connectionState.c_str());
                  socket_connection_running = (connectionState == "true") ? true : false;
                  if (control_ != nullptr) {
                      std::string connectionErr = data->get_map()["error"]->get_string();
-                     std::string connectionMsg = data->get_map()["msg"]->get_string();
+                     std::string connectionMsg = data->get_map()["message"]->get_string();
                      PRINTF_INFO("connectionErr = %s", connectionErr.c_str());
                      PRINTF_INFO("connectionMsg = %s", connectionMsg.c_str());
 
                      JSONBuilder builder;
                      builder.addObject("connection_state", connectionState);
                      builder.addObject( "error", connectionErr);
-                     builder.addObject("msg", connectionMsg);
+                     builder.addObject("message", connectionMsg);
                      if(socket_connection_running){
                          std::string audioId = data->get_map()["audio_id"]->get_string();
                          builder.addObject("audio_id", audioId);
@@ -101,24 +106,25 @@ namespace agora {
                 io.connect("https://agorasockets.marsview.ai");
 //                io.connect("http://192.168.29.147:3004");
 //                io.connect("https://480d024d4396.ngrok.io");
+//                io.connect("https://4b11-2405-201-c014-80ba-79a9-b59a-72d2-8b30.ngrok.io");
                 audio_metadata = serializePCMFrameMetadata(inAudioPcmFrame);
                 socket_connection_init = true;
             }
-            if((!socket_started || waiting_for_accept ) && !ended_existing_connection){
-                size_t length = inAudioPcmFrame.samples_per_channel_ * inAudioPcmFrame.num_channels_;
-                if(length >= inAudioPcmFrame.kMaxDataSizeSamples){
-                    length = inAudioPcmFrame.kMaxDataSizeSamples;
-                }
-                for(int i=0; i < length; i++){
-                    init_audio_data.push_back(inAudioPcmFrame.data_[i]);
-                }
-            }
+//            if((!socket_started || waiting_for_accept ) && !ended_existing_connection){
+//                size_t length = inAudioPcmFrame.samples_per_channel_ * inAudioPcmFrame.num_channels_;
+//                if(length >= inAudioPcmFrame.kMaxDataSizeSamples){
+//                    length = inAudioPcmFrame.kMaxDataSizeSamples;
+//                }
+//                for(int i=0; i < length; i++){
+//                    init_audio_data.push_back(inAudioPcmFrame.data_[i]);
+//                }
+//            }
             if(socket_connection_running && !ended_existing_connection){
-                if(frameNumber == 0){
-                    std::string initSerialData = serializePCMFrameAudioData(init_audio_data, frameNumber);
-                    io.socket()->emit("pcm-frame", initSerialData);
-                    frameNumber++;
-                }
+//                if(frameNumber == 0){
+//                    std::string initSerialData = serializePCMFrameAudioData(init_audio_data, frameNumber);
+//                    io.socket()->emit("pcm-frame", initSerialData);
+//                    frameNumber++;
+//                }
                 std::string frameJson = serializePCMFrameAudioData(inAudioPcmFrame, frameNumber);
                 io.socket()->emit("pcm-frame", frameJson);
                 frameNumber++;
