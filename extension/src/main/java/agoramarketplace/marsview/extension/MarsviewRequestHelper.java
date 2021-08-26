@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -12,19 +13,48 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.concurrent.ExecutionException;
+
 import androidx.annotation.Keep;
 
 @Keep
 public class MarsviewRequestHelper {
+    private String projectApiKey;
+    private String projectApiSecret;
     private String apiKey;
     private String apiSecret;
     private String userId;
     private String projectId;
-    public MarsviewRequestHelper(String apiKey, String apiSecret, String userId, String projectId){
-        this.apiKey = apiKey;
-        this.apiSecret = apiSecret;
-        this.userId = userId;
-        this.projectId = projectId;
+//    public MarsviewRequestHelper(String apiKey, String apiSecret, String userId, String projectId){
+//        this.apiKey = apiKey;
+//        this.apiSecret = apiSecret;
+//        this.userId = userId;
+//        this.projectId = projectId;
+//    }
+    public MarsviewRequestHelper(String projectApiKey, String projectApiSecret){
+        this.projectApiKey = projectApiKey;
+        this.projectApiSecret = projectApiSecret;
+        String out;
+
+        JSONObject object = new JSONObject();
+        try {
+            object.put("apiKey", this.projectApiKey);
+            object.put("apiSecret", this.projectApiSecret);
+//            out = new PostTask().execute("http://localhost:3001", object.toString()).get();
+
+            out = new PostTask().execute("https://agorasockets.marsview.ai/helpers/authenticate_user_project", object.toString()).get();
+
+            JSONObject outJson = new JSONObject(out);
+            JSONObject data = outJson.getJSONObject("data");
+            this.apiKey = data.getString("api_key");
+            this.apiSecret = data.getString("api_secret");
+            this.projectId = data.getString("project_id");
+            this.userId = data.getString("user_id");
+            Log.d("Agora_Marsview_Java", outJson.toString());
+
+        } catch (JSONException | ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private JSONObject getAccessToken(){

@@ -55,24 +55,33 @@ public class MainActivity extends AppCompatActivity implements io.agora.rtc2.IMe
     private SurfaceView mRemoteView;
     private String socketUrl;
     private SharedPreferences prefs;
+    private MarsviewRequestHelper requestHelper;
+
 //    private final String API_KEY = "d0c900e8-056c-44da-87eb-48177abf6b95";
 //    private final String SECRET_KEY = "T34G1T1-0NP49PH-GZNMG5V-FAZPQ5A";
-//    private final String USER_ID = "12345678910@agora.io";
+////    private final String USER_ID = "12345678910@agora.io";
 //      private final String API_KEY = "43cd3991-4551-4b92-a324-2c5214f7e4b7";
 //      private final String SECRET_KEY = "8F6KK4F-8N8MQ4Q-MCJ2RMG-2KVY9DW";
 //      private final String USER_ID = "65750@agora.io";
+//
+//    private final String API_KEY = "fc6e7577-7401-4d9a-bacb-44b6dac8de77";
+//    private final String SECRET_KEY = "ZHQ7AXX-EG0MV6M-QB5M9DH-VB4DWXX";
+//    private final String USER_ID = "50000@agora.io";
+//    private final String PROJECT_ID = "50000";
 
-    private final String API_KEY = "fc6e7577-7401-4d9a-bacb-44b6dac8de77";
-    private final String SECRET_KEY = "ZHQ7AXX-EG0MV6M-QB5M9DH-VB4DWXX";
-    private final String USER_ID = "50000@agora.io";
-    private final String PROJECT_ID = "50000";
+
+//    private final String API_KEY = "4a7903e9-8d63-4258-b84b-11aaa56e4362";
+//    private final String SECRET_KEY = "99WG7TF-HNHM4P4-Q15H3AK-MNQ46RH";
+//    private final String USER_ID = "50000@agora.io";
+//    private final String PROJECT_ID = "50000";
+
+    private final String API_KEY = "1cbb6faa-e87c-4fc7-8720-b1dfe2bcb9e2";
+    private final String SECRET_KEY = "3JXPZAJ-X1Y4ZHS-GWGB3QX-WAYBKRG";
+
 
     private String audioId;
 
-//    private final String API_KEY = "84e32bf6-c212-4daa-b9eb-4823470a7876";
-//    private final String SECRET_KEY = "GKHJQXQ-R894VAJ-Q7NMG8R-8W57GXJ";
-//    private final String USER_ID = "phani@marsview.ai";
-//    private final String PROJECT_ID = "396661";
+
     private boolean extensionEnabled = true;
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -83,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements io.agora.rtc2.IMe
         channelName = getString(R.string.channel_name);
         setContentView(R.layout.activity_main);
         prefs = getSharedPreferences("agora-marsivew-prefs", MODE_PRIVATE);
-
+        requestHelper = new MarsviewRequestHelper(API_KEY, SECRET_KEY);
         initUI();
         rtcOnOffButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -228,11 +237,8 @@ public class MainActivity extends AppCompatActivity implements io.agora.rtc2.IMe
             Log.d(TAG, "api call join channel");
 
             mRtcEngine.setExtensionProperty(ExtensionManager.EXTENSION_VENDOR_NAME, ExtensionManager.EXTENSION_AUDIO_FILTER_NAME, "API_KEY", API_KEY); // login to app.marsivew.ai
-            mRtcEngine.setExtensionProperty(ExtensionManager.EXTENSION_VENDOR_NAME, ExtensionManager.EXTENSION_AUDIO_FILTER_NAME, "SECRET_KEY", SECRET_KEY); // login to app.marsview.ai
-            mRtcEngine.setExtensionProperty(ExtensionManager.EXTENSION_VENDOR_NAME, ExtensionManager.EXTENSION_AUDIO_FILTER_NAME, "USER_ID", USER_ID); // agora console id
-            mRtcEngine.setExtensionProperty(ExtensionManager.EXTENSION_VENDOR_NAME, ExtensionManager.EXTENSION_AUDIO_FILTER_NAME, "PROJECT_ID", PROJECT_ID);
+            mRtcEngine.setExtensionProperty(ExtensionManager.EXTENSION_VENDOR_NAME, ExtensionManager.EXTENSION_AUDIO_FILTER_NAME, "API_SECRET", SECRET_KEY); // login to app.marsview.ai
 
-//            mRtcEngine.setExtensionProperty(ExtensionManager.EXTENSION_VENDOR_NAME, ExtensionManager.EXTENSION_AUDIO_FILTER_NAME, "socket_addr", socketUrl);
             mRtcEngine.joinChannel(getString(R.string.agora_temp_token), channelName, "", 0);
             mRtcEngine.startPreview();
             rtcEngineRunning = true;
@@ -313,7 +319,6 @@ public class MainActivity extends AppCompatActivity implements io.agora.rtc2.IMe
             if(key.equalsIgnoreCase("transactionId")){
                 // Marsview provides a helper class to facilitate the developer in posting compute models
                 // and get processing state of each model and metadata afterwards.
-                MarsviewRequestHelper requestHelper = new MarsviewRequestHelper(API_KEY, SECRET_KEY, USER_ID, PROJECT_ID);
                 try {
                     JSONObject data = new JSONObject(value);
                     String txnId = data.getString("txnId");

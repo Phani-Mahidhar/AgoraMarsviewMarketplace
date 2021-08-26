@@ -14,7 +14,6 @@ namespace agora {
         }
 
         ExtensionAudioFilter::~ExtensionAudioFilter() {
-            PRINTF_INFO("destroying Extension audio filter");
             audioProcessor_.reset();
         }
 
@@ -32,7 +31,6 @@ namespace agora {
         }
 
         void ExtensionAudioFilter::setEnabled(bool enable) {
-            PRINTF_INFO("enable : %d", enable);
             enabled_ = enable;
             if(enable){
                 audioProcessor_->startStreaming();
