@@ -23,12 +23,17 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+
+// Imports from Marsview's extension.
+// Extension Manager contains information about the extension such as the EXTENSION_VENDOR_NAME, EXTENSION_AUDIO_FILTER_NAME
 import agoramarketplace.marsview.extension.ExtensionManager;
 import agoramarketplace.marsview.extension.MarsviewRequestHelper;
 
+
+// Agora SDK imports.
 import io.agora.rtc2.Constants;
 import io.agora.rtc2.IRtcEngineEventHandler;
-import io.agora.rtc2.RtcEngine;
+import io.agora.rtc2.RtcEngine; 
 import io.agora.rtc2.RtcEngineConfig;
 import io.agora.rtc2.video.VideoCanvas;
 import io.agora.rtc2.video.VideoEncoderConfiguration;
@@ -53,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements io.agora.rtc2.IMe
     private boolean rtcEngineRunning = false;
     private RtcEngine mRtcEngine;
     private SurfaceView mRemoteView;
+    // socketUrl is not being used now, or anything related to the socket connection cannot be configured in the front end.
     private String socketUrl;
     private SharedPreferences prefs;
     private MarsviewRequestHelper requestHelper;
@@ -94,6 +100,8 @@ public class MainActivity extends AppCompatActivity implements io.agora.rtc2.IMe
         prefs = getSharedPreferences("agora-marsivew-prefs", MODE_PRIVATE);
         requestHelper = new MarsviewRequestHelper(API_KEY, SECRET_KEY);
         initUI();
+
+        // On listener for the button which enables and disables the extension.
         rtcOnOffButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,6 +148,8 @@ public class MainActivity extends AppCompatActivity implements io.agora.rtc2.IMe
         rtcOnOffButton = findViewById(R.id.rtc_on_off);
         socketUrlContainer = findViewById(R.id.socket_url);
         socketButton = findViewById(R.id.socket_url_button);
+
+        // the socket code is no longer being used. it was previously used for testing.
         socketUrl = prefs.getString("socket-url", "http://192.168.29.147:8081");
         socketUrlContainer.setText(socketUrl);
         socketButton.setOnClickListener(new View.OnClickListener() {
@@ -153,6 +163,8 @@ public class MainActivity extends AppCompatActivity implements io.agora.rtc2.IMe
                 toast.show();
             }
         });
+        
+        // check android permissions.
         checkPermission();
     }
 
@@ -311,6 +323,7 @@ public class MainActivity extends AppCompatActivity implements io.agora.rtc2.IMe
         extensionEnabled = true;
     }
 
+    // Method to receive events from the agora extensions. Implemented in the io.agora.rtc2.MediaExtensionObserver interface.
     @Override
     public void onEvent(String vendor, String extension, String key, String value) {
         Log.d(TAG, "\nkey: " + key+ "\nValue: " + value);
